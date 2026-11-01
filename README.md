@@ -7,6 +7,7 @@ Node.js, Express.js and Backend Development Lab Assignments.
 ## 👨‍🎓 Student Details
 
 - **Student Name:** D. Manoj
+- **Registration Number:** 252U1R5033
 - **Subject:** Backend Development Fundamentals
 
 ---

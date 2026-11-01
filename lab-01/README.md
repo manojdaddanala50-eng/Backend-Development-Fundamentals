@@ -6,7 +6,7 @@
 
 - **Lab Title:** Lab 1: Node.js and Express Server
 - **Student Name:** D. Manoj
-- **Registration Number:** `[Enter Your Registration Number Here]`
+- **Registration Number:** 252U1R5033
 - **Section:** `[Enter Your Section Here]`
 - **Academic Year:** 2026-2027
 
@@ -160,14 +160,14 @@ Below is the annotated `package.json` created for this assignment:
 
 ### 2. About Endpoint
 * **Endpoint:** `GET /about`
-* **Description:** Returns author profile information including student name, registration number placeholder, and section placeholder in structured JSON.
+* **Description:** Returns author profile information including student name, registration number (252U1R5033), and section placeholder in structured JSON.
 * **HTTP Status Code:** `200 OK`
 * **Response Content-Type:** `application/json; charset=utf-8`
 * **Sample Response Body:**
   ```json
   {
     "studentName": "D. Manoj",
-    "registrationNumber": "[Your Registration Number]",
+    "registrationNumber": "252U1R5033",
     "section": "[Your Section]"
   }
   ```

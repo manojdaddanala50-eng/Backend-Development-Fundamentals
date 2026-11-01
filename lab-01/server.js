@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 app.get('/about', (req, res) => {
     res.status(200).json({
         studentName: 'D. Manoj',
-        registrationNumber: '[Your Registration Number]', // Placeholder - to be filled by student
+        registrationNumber: '252U1R5033',
         section: '[Your Section]'                         // Placeholder - to be filled by student
     });
 });
