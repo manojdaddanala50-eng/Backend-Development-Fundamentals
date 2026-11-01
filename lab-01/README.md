@@ -9,7 +9,7 @@
 - **Registration Number:** 252U1R5033
 - **Section:** `[Enter Your Section Here]`
 - **Academic Year:** 2026-2027
-- **Live Deployed URL:** [https://agile-tin-oyyr1rx.tmp.now](https://agile-tin-oyyr1rx.tmp.now)
+- **Live Permanent Deployed URL:** [https://backend-development-fundamentals-zeta.vercel.app](https://backend-development-fundamentals-zeta.vercel.app)
 
 ---
 
