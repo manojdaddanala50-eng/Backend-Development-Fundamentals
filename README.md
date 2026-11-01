@@ -12,6 +12,17 @@ Node.js, Express.js and Backend Development Lab Assignments.
 
 ---
 
+## 🌐 Live Deployed Application
+
+- **Live URL:** [https://agile-tin-oyyr1rx.tmp.now](https://agile-tin-oyyr1rx.tmp.now)
+- **Live Endpoints:**
+  - [GET /](https://agile-tin-oyyr1rx.tmp.now/) (Welcome message)
+  - [GET /about](https://agile-tin-oyyr1rx.tmp.now/about) (Student JSON profile)
+  - [GET /time](https://agile-tin-oyyr1rx.tmp.now/time) (Server timestamp JSON)
+  - [GET /invalid](https://agile-tin-oyyr1rx.tmp.now/invalid) (404 error handler JSON)
+
+---
+
 ## 📚 Labs Directory
 
 | Lab Number | Title | Directory | Status |

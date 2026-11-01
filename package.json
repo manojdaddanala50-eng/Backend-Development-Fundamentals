@@ -1,0 +1,12 @@
+{
+  "name": "backend-development-fundamentals",
+  "version": "1.0.0",
+  "description": "Node.js, Express.js and Backend Development Lab Assignments.",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node lab-01/server.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}

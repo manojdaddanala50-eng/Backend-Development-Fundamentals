@@ -93,14 +93,19 @@ app.use((req, res) => {
 /**
  * Step 4: Start the Express server on port 3000
  */
-app.listen(PORT, () => {
-    console.log('====================================================');
-    console.log('  Express Server is running successfully!');
-    console.log(`  Server listening on: http://localhost:${PORT}`);
-    console.log('  Available endpoints:');
-    console.log(`   - GET  http://localhost:${PORT}/`);
-    console.log(`   - GET  http://localhost:${PORT}/about`);
-    console.log(`   - GET  http://localhost:${PORT}/time`);
-    console.log(`   - GET  http://localhost:${PORT}/invalid  (Tests 404 handler)`);
-    console.log('====================================================');
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log('====================================================');
+        console.log('  Express Server is running successfully!');
+        console.log(`  Server listening on: http://localhost:${PORT}`);
+        console.log('  Available endpoints:');
+        console.log(`   - GET  http://localhost:${PORT}/`);
+        console.log(`   - GET  http://localhost:${PORT}/about`);
+        console.log(`   - GET  http://localhost:${PORT}/time`);
+        console.log(`   - GET  http://localhost:${PORT}/invalid  (Tests 404 handler)`);
+        console.log('====================================================');
+    });
+}
+
+// Export app instance for serverless deployment (e.g. Vercel)
+module.exports = app;
