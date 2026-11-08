@@ -10,7 +10,7 @@
 ## 👨‍🎓 Student Profile
 
 - **Student Name:** DADDANALA RANGA MANOJ KUMAR REDDY
-- **Registration Number:** `252U2R5033`
+- **Registration Number:** `252U1R5033`
 - **Class / Section:** `AI AND DE 2A`
 - **Subject / Course:** ADBMS (Advanced Database Management Systems) & Backend Development Fundamentals
 - **Date of Execution:** 08/11/2026
