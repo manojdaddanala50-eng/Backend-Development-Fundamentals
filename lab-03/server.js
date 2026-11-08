@@ -1,19 +1,38 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const { open } = require('sqlite');
 const sqlite3 = require('sqlite3');
 
 const app = express();
 app.use(express.json());
 
-const dbPath = path.join(__dirname, 'books.db');
+// Support serverless (Vercel) /tmp directory for SQLite writable database
+let dbPath = path.join(__dirname, 'books.db');
+if (process.env.VERCEL) {
+  const tmpDbPath = path.join('/tmp', 'books.db');
+  if (!fs.existsSync(tmpDbPath)) {
+    try {
+      if (fs.existsSync(dbPath)) {
+        fs.copyFileSync(dbPath, tmpDbPath);
+      }
+    } catch (err) {
+      console.warn('Could not copy books.db to /tmp:', err.message);
+    }
+  }
+  dbPath = tmpDbPath;
+}
+
 let db = null;
+let isInitialized = false;
 const PORT = process.env.PORT || 3000;
 
 /**
- * Initialize SQLite Database connection and start Express server
+ * Initialize SQLite Database connection and create tables if needed
  */
 const initializeDBAndServer = async () => {
+  if (isInitialized && db) return db;
+
   try {
     db = await open({
       filename: dbPath,
@@ -33,7 +52,7 @@ const initializeDBAndServer = async () => {
 
     // Seed data if table is empty
     const countResult = await db.get(`SELECT COUNT(*) AS count FROM book;`);
-    if (countResult.count === 0) {
+    if (countResult && countResult.count === 0) {
       await db.exec(`
         INSERT INTO book (title, author, price, pages) VALUES
         ('Harry Potter and the Sorcerer''s Stone', 'J.K. Rowling', 450, 320),
@@ -49,20 +68,32 @@ const initializeDBAndServer = async () => {
       `);
     }
 
-    if (process.env.NODE_ENV !== 'test') {
+    isInitialized = true;
+
+    // Start standalone listener when executed directly
+    if (!process.env.VERCEL && process.env.NODE_ENV !== 'test' && require.main === module) {
       app.listen(PORT, () => {
-        console.log(`Server running at http://localhost:${PORT}/`);
+        console.log(`Lab 3 Server running at http://localhost:${PORT}/`);
       });
     }
   } catch (error) {
     console.error(`Database Initialization Error: ${error.message}`);
-    process.exit(1);
+    if (!process.env.VERCEL) process.exit(1);
   }
 };
 
+// Start initial setup
 initializeDBAndServer();
 
-// Health check / Welcome endpoint
+// Ensure DB is ready before every request
+app.use(async (req, res, next) => {
+  if (!db) {
+    await initializeDBAndServer();
+  }
+  next();
+});
+
+// Root welcome endpoint for Lab 3
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Lab 3: REST API with Query Parameters, Validation & SQLite',
@@ -70,21 +101,24 @@ app.get('/', (req, res) => {
       name: 'DADDANALA RANGA MANOJ KUMAR REDDY',
       registrationNumber: '252U2R5033',
       section: 'AI AND DE 2A',
-      course: 'ADBMS - Backend Development Fundamentals'
+      course: 'ADBMS - Backend Development Fundamentals',
+      experiment: 'Lab report 3'
     },
-    documentation: '/books'
+    endpoints: {
+      getAllBooks: '/books',
+      searchBooks: '/books?search_q=Clean',
+      sortBooks: '/books?order_by=price&order=DESC',
+      filterPriceRange: '/books?min_price=500&max_price=800',
+      getSingleBook: '/books/2',
+      createBook: 'POST /books',
+      updateBook: 'PUT /books/2',
+      deleteBook: 'DELETE /books/10'
+    }
   });
 });
 
 /**
  * Task 1, 2, 3: GET /books/
- * Supports Query Parameters:
- * - search_q: partial search on title using LIKE
- * - order_by: column name (id, title, author, price, pages)
- * - order: ASC or DESC
- * - limit: max number of books (default 10)
- * - offset: pagination offset (default 0)
- * - min_price, max_price: price range filter using BETWEEN
  */
 app.get('/books', async (req, res) => {
   try {
@@ -98,18 +132,15 @@ app.get('/books', async (req, res) => {
       max_price = 1000000
     } = req.query;
 
-    // Sanitize and validate ORDER BY to protect against SQL injection
     const allowedColumns = ['id', 'title', 'author', 'price', 'pages'];
     const validOrderBy = allowedColumns.includes(order_by) ? order_by : 'id';
     const validOrder = order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
 
-    // Parse numeric query parameters
     const parsedLimit = Math.max(1, parseInt(limit, 10) || 10);
     const parsedOffset = Math.max(0, parseInt(offset, 10) || 0);
     const parsedMinPrice = Math.max(0, parseFloat(min_price) || 0);
     const parsedMaxPrice = parseFloat(max_price) || 1000000;
 
-    // Parameterized SQL query
     const getBooksQuery = `
       SELECT * FROM book
       WHERE title LIKE ?
@@ -134,7 +165,7 @@ app.get('/books', async (req, res) => {
 });
 
 /**
- * GET /books/:bookId/ - Retrieve a single book by ID
+ * GET /books/:bookId/ - Retrieve single book
  */
 app.get('/books/:bookId', async (req, res) => {
   try {
@@ -153,37 +184,30 @@ app.get('/books/:bookId', async (req, res) => {
 });
 
 /**
- * Task 4 & 5: POST /books/
- * Creates a new book record with comprehensive body validation.
- * Rejects missing title, missing author, or non-numeric price with 400 Bad Request.
- * Returns 201 Created on success.
+ * POST /books/ - Create book with validation
  */
 app.post('/books', async (req, res) => {
   try {
     const { title, author, price, pages } = req.body;
 
-    // Validation 1: Title
     if (!title || typeof title !== 'string' || title.trim() === '') {
       return res.status(400).json({
         message: "Validation Error: 'title' is required and must be a non-empty string."
       });
     }
 
-    // Validation 2: Author
     if (!author || typeof author !== 'string' || author.trim() === '') {
       return res.status(400).json({
         message: "Validation Error: 'author' is required and must be a non-empty string."
       });
     }
 
-    // Validation 3: Price (must be numeric and non-negative)
     if (price === undefined || price === null || isNaN(Number(price)) || Number(price) < 0) {
       return res.status(400).json({
         message: "Validation Error: 'price' is required and must be a non-negative number."
       });
     }
 
-    // Validation 4: Pages (optional or must be positive integer)
     if (pages !== undefined && (isNaN(Number(pages)) || Number(pages) <= 0)) {
       return res.status(400).json({
         message: "Validation Error: 'pages' must be a positive integer."
@@ -212,15 +236,12 @@ app.post('/books', async (req, res) => {
 });
 
 /**
- * Task 5: PUT /books/:bookId/
- * Updates an existing book.
- * Returns 200 OK after update, 404 when ID does not exist, 400 for bad input.
+ * PUT /books/:bookId/ - Update book
  */
 app.put('/books/:bookId', async (req, res) => {
   try {
     const { bookId } = req.params;
 
-    // Check if book exists
     const checkQuery = `SELECT * FROM book WHERE id = ?;`;
     const existingBook = await db.get(checkQuery, [bookId]);
 
@@ -230,14 +251,12 @@ app.put('/books/:bookId', async (req, res) => {
 
     const { title, author, price, pages } = req.body;
 
-    // Validate price if supplied
     if (price !== undefined && (isNaN(Number(price)) || Number(price) < 0)) {
       return res.status(400).json({
         message: "Validation Error: 'price' must be a non-negative number."
       });
     }
 
-    // Validate pages if supplied
     if (pages !== undefined && (isNaN(Number(pages)) || Number(pages) <= 0)) {
       return res.status(400).json({
         message: "Validation Error: 'pages' must be a positive integer."
@@ -272,9 +291,7 @@ app.put('/books/:bookId', async (req, res) => {
 });
 
 /**
- * Task 5: DELETE /books/:bookId/
- * Deletes a book record.
- * Returns 200 OK after delete, 404 when ID does not exist.
+ * DELETE /books/:bookId/ - Delete book
  */
 app.delete('/books/:bookId', async (req, res) => {
   try {

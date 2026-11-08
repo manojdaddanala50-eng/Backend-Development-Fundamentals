@@ -1,12 +1,19 @@
 {
   "name": "backend-development-fundamentals",
   "version": "1.0.0",
-  "description": "Node.js, Express.js and Backend Development Lab Assignments.",
+  "description": "Node.js, Express.js, SQLite, and Backend Development Lab Assignments.",
   "main": "api/index.js",
   "scripts": {
-    "start": "node lab-01/server.js"
+    "start": "node lab-03/server.js",
+    "start:lab3": "node lab-03/server.js",
+    "start:lab1": "node lab-01/server.js",
+    "test:lab3": "node lab-03/test-api.js"
   },
+  "author": "DADDANALA RANGA MANOJ KUMAR REDDY (252U2R5033)",
   "dependencies": {
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "pdf-lib": "^1.17.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   }
 }
