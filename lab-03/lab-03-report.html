@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Report 3 - DADDANALA RANGA MANOJ KUMAR REDDY (252U2R5033)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --primary: #8b3a1a;
+      --primary-dark: #632810;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --bg-light: #f9fafb;
+      --border-color: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+      background-color: #525659;
+      line-height: 1.6;
+    }
+
+    .no-print-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #1e293b;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    }
+
+    .no-print-toolbar h1 {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-print {
+      background: #ea580c;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-print:hover {
+      background: #c2410c;
+    }
+
+    .page-container {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 24px auto;
+      background: #ffffff;
+      padding: 24mm 20mm;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    /* Page Break for printing */
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    /* =========================================================
+       PAGE 1: COVER PAGE EXACT MATCH TO SPECIFICATION
+       ========================================================= */
+    .cover-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 250mm;
+    }
+
+    .dept-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #111827;
+      text-transform: uppercase;
+      margin-top: 15mm;
+      line-height: 1.4;
+    }
+
+    .hero-banner {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 25mm;
+      margin-bottom: 20mm;
+    }
+
+    .lab-title-box {
+      font-family: 'Cinzel', serif;
+      text-align: left;
+      min-width: 220px;
+    }
+
+    .lab-title-box .course-tag {
+      font-size: 26px;
+      font-weight: 500;
+      color: #92400e;
+      letter-spacing: 1px;
+    }
+
+    .lab-title-box .report-heading {
+      font-size: 38px;
+      font-weight: 500;
+      color: #b45309;
+      line-height: 1.1;
+      margin-top: 4px;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      row-gap: 36px;
+      column-gap: 40px;
+      margin-top: 10mm;
+      font-size: 15px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .detail-label {
+      font-size: 14px;
+      color: #4b5563;
+      font-weight: 400;
+    }
+
+    .detail-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+      letter-spacing: 0.3px;
+    }
+
+    .repo-link-footer {
+      margin-top: auto;
+      padding-top: 25mm;
+      font-size: 15px;
+      color: #1f2937;
+    }
+
+    .repo-link-footer a {
+      color: #1d4ed8;
+      text-decoration: underline;
+      word-break: break-all;
+    }
+
+    /* =========================================================
+       REPORT CONTENT STYLING
+       ========================================================= */
+    .report-header {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .report-header h2 {
+      font-size: 20px;
+      color: #111827;
+    }
+
+    .report-header .meta-sub {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    h3.section-heading {
+      font-size: 16px;
+      font-weight: 700;
+      color: #92400e;
+      border-left: 4px solid #b45309;
+      padding-left: 10px;
+      margin: 22px 0 12px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    p, li {
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px 0;
+      font-size: 13px;
+    }
+
+    table.data-table th, table.data-table td {
+      border: 1px solid #d1d5db;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    table.data-table th {
+      background: #f3f4f6;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    table.data-table tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .badge-get { background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+    .badge-post { background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+    .badge-put { background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+    .badge-delete { background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+
+    pre.code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-x: auto;
+      margin: 12px 0 18px 0;
+    }
+
+    .bug-box {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      background: #f9fafb;
+    }
+
+    .bug-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #dc2626;
+      margin-bottom: 6px;
+    }
+
+    .bug-desc {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 6px;
+    }
+
+    .bug-fix {
+      font-size: 13px;
+      color: #059669;
+      font-weight: 500;
+    }
+
+    .qna-box {
+      background: #f8fafc;
+      border-left: 3px solid #3b82f6;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .qna-q {
+      font-weight: 700;
+      color: #1e3a8a;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .qna-a {
+      font-size: 13px;
+      color: #334155;
+    }
+
+    .eval-block {
+      margin-top: 30px;
+      border-top: 2px dashed #9ca3af;
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    @media print {
+      body {
+        background-color: #ffffff;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .page-container {
+        box-shadow: none;
+        margin: 0;
+        width: 100%;
+        padding: 15mm 15mm;
+      }
+      .page-break {
+        page-break-before: always;
+        break-before: page;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Print Toolbar -->
+  <div class="no-print-toolbar">
+    <div>
+      <strong>Lab Report 3: REST API &amp; Validation</strong> — DADDANALA RANGA MANOJ KUMAR REDDY (252U2R5033)
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      🖨️ Print / Save as PDF
+    </button>
+  </div>
+
+  <!-- =========================================================
+       PAGE 1: COVER PAGE
+       ========================================================= -->
+  <div class="page-container">
+    <div class="cover-page">
+      <div>
+        <div class="dept-title">
+          DEPARTMENT OF COMPUTER SCIENCE &amp;<br>ENGINEERING
+        </div>
+
+        <div class="hero-banner">
+          <div class="lab-title-box">
+            <div class="course-tag">ADBMS —</div>
+            <div class="report-heading">Lab<br>Report</div>
+          </div>
+        </div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Student Name:</span>
+            <span class="detail-value">DADDANALA RANGA MANOJ KUMAR REDDY</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Roll / Reg No:</span>
+            <span class="detail-value">252U2R5033</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Course:</span>
+            <span class="detail-value">ADBMS</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Section / Room:</span>
+            <span class="detail-value">AI AND DE 2A</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Experiment No:</span>
+            <span class="detail-value">Lab report 3</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Date of Execution:</span>
+            <span class="detail-value">08/11/2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="repo-link-footer">
+        <strong>Github repo link :</strong> 
+        <a href="https://github.com/manojdaddanala50-eng/Backend-Development-Fundamentals" target="_blank">
+          https://github.com/manojdaddanala50-eng/Backend-Development-Fundamentals
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       PAGE 2: LAB EXPERIMENT DETAILS & IMPLEMENTATION
+       ========================================================= -->
+  <div class="page-container page-break">
+    <div class="report-header">
+      <div>
+        <h2>Experiment 3: REST API, Query Parameters, Validation &amp; Debugging</h2>
+        <div class="meta-sub">Course: ADBMS · Faculty: Joel Prashanth D · Year II Term II</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; color: #92400e;">
+        Reg: 252U2R5033
+      </div>
+    </div>
+
+    <h3 class="section-heading">1. Objective</h3>
+    <p>
+      To transform basic CRUD database operations into a professional, stateless <strong>RESTful API</strong> using Express.js and SQLite. The lab focuses on implementing query parameter filtering (partial title search, sorting, price range, pagination), rigorous request payload validation with standard HTTP error codes (400, 404, 201), safe SQL parameterized queries to prevent SQL injection, and diagnosing common Node.js backend bugs.
+    </p>
+
+    <h3 class="section-heading">2. Database Schema &amp; Seed Data</h3>
+    <p>The database engine is <strong>SQLite3</strong> with the <code>sqlite</code> promise-based driver. The schema represents a book catalog entity:</p>
+    <pre class="code-block">CREATE TABLE IF NOT EXISTS book (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  author TEXT NOT NULL,
+  price INTEGER NOT NULL,
+  pages INTEGER NOT NULL
+);</pre>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Price (₹)</th>
+          <th>Pages</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Harry Potter and the Sorcerer's Stone</td><td>J.K. Rowling</td><td>450</td><td>320</td></tr>
+        <tr><td>2</td><td>Clean Code</td><td>Robert C. Martin</td><td>650</td><td>464</td></tr>
+        <tr><td>3</td><td>JavaScript: The Good Parts</td><td>Douglas Crockford</td><td>350</td><td>176</td></tr>
+        <tr><td>4</td><td>Design Patterns</td><td>Erich Gamma</td><td>800</td><td>395</td></tr>
+        <tr><td>5</td><td>You Don't Know JS: Scope &amp; Closures</td><td>Kyle Simpson</td><td>550</td><td>278</td></tr>
+        <tr><td>6</td><td>The Pragmatic Programmer</td><td>Andrew Hunt</td><td>700</td><td>352</td></tr>
+        <tr><td>7</td><td>Eloquent JavaScript</td><td>Marijn Haverbeke</td><td>400</td><td>472</td></tr>
+        <tr><td>8</td><td>Introduction to Algorithms</td><td>Thomas H. Cormen</td><td>950</td><td>1312</td></tr>
+        <tr><td>9</td><td>Refactoring: Improving Existing Code</td><td>Martin Fowler</td><td>600</td><td>448</td></tr>
+        <tr><td>10</td><td>Designing Data-Intensive Applications</td><td>Martin Kleppmann</td><td>850</td><td>616</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-heading">3. API Specification &amp; Endpoints</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Endpoint</th>
+          <th>Parameters / Payload</th>
+          <th>Status</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-get">GET</span></td>
+          <td><code>/books</code></td>
+          <td><code>search_q</code>, <code>order_by</code>, <code>order</code>, <code>min_price</code>, <code>max_price</code>, <code>limit</code>, <code>offset</code></td>
+          <td>200 OK</td>
+          <td>Returns filtered, sorted, paginated book records.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-get">GET</span></td>
+          <td><code>/books/:bookId</code></td>
+          <td><code>bookId</code> (Path parameter)</td>
+          <td>200 / 404</td>
+          <td>Fetches a single book by ID. Returns 404 if missing.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-post">POST</span></td>
+          <td><code>/books</code></td>
+          <td><code>{ title, author, price, pages }</code></td>
+          <td>201 / 400</td>
+          <td>Creates a book record. Validates types and non-empty values.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-put">PUT</span></td>
+          <td><code>/books/:bookId</code></td>
+          <td><code>bookId</code> + JSON Body with updated fields</td>
+          <td>200 / 404</td>
+          <td>Updates an existing book. Returns 404 if ID not found.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-delete">DELETE</span></td>
+          <td><code>/books/:bookId</code></td>
+          <td><code>bookId</code> (Path parameter)</td>
+          <td>200 / 404</td>
+          <td>Removes book from database. Returns 404 if ID not found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- =========================================================
+       PAGE 3: SOURCE CODE & VERIFICATION
+       ========================================================= -->
+  <div class="page-container page-break">
+    <div class="report-header">
+      <div>
+        <h2>Core Implementation (`server.js`)</h2>
+        <div class="meta-sub">Node.js · Express.js · SQLite Async Integration</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; color: #92400e;">
+        252U2R5033
+      </div>
+    </div>
+
+    <pre class="code-block">const express = require('express');
+const path = require('path');
+const { open } = require('sqlite');
+const sqlite3 = require('sqlite3');
+
+const app = express();
+app.use(express.json());
+
+const dbPath = path.join(__dirname, 'books.db');
+let db = null;
+const PORT = process.env.PORT || 3000;
+
+// Initialize SQLite connection and boot server
+const initializeDBAndServer = async () => {
+  try {
+    db = await open({ filename: dbPath, driver: sqlite3.Database });
+    app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}/`));
+  } catch (error) {
+    console.error(`DB Error: ${error.message}`);
+    process.exit(1);
+  }
+};
+initializeDBAndServer();
+
+// GET /books - Search, Sorting, Filtering, and Pagination
+app.get('/books', async (req, res) => {
+  const { search_q = '', order_by = 'id', order = 'ASC', limit = 10, offset = 0, min_price = 0, max_price = 1000000 } = req.query;
+  const allowedCols = ['id', 'title', 'author', 'price', 'pages'];
+  const validOrderBy = allowedCols.includes(order_by) ? order_by : 'id';
+  const validOrder = order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+  const query = `
+    SELECT * FROM book
+    WHERE title LIKE ? AND price BETWEEN ? AND ?
+    ORDER BY ${validOrderBy} ${validOrder}
+    LIMIT ? OFFSET ?;
+  `;
+  const books = await db.all(query, [`%${search_q}%`, min_price, max_price, limit, offset]);
+  res.status(200).json(books);
+});
+
+// POST /books - Validation & 201 Response
+app.post('/books', async (req, res) => {
+  const { title, author, price, pages } = req.body;
+  if (!title || typeof title !== 'string' || title.trim() === '') {
+    return res.status(400).json({ message: "Validation Error: 'title' is required." });
+  }
+  if (!author || typeof author !== 'string' || author.trim() === '') {
+    return res.status(400).json({ message: "Validation Error: 'author' is required." });
+  }
+  if (price === undefined || isNaN(Number(price)) || Number(price) < 0) {
+    return res.status(400).json({ message: "Validation Error: 'price' must be a non-negative number." });
+  }
+
+  const result = await db.run(
+    `INSERT INTO book (title, author, price, pages) VALUES (?, ?, ?, ?);`,
+    [title.trim(), author.trim(), Number(price), Number(pages) || 100]
+  );
+  res.status(201).json({ message: 'Book Added Successfully', bookId: result.lastID });
+});</pre>
+
+    <h3 class="section-heading">4. Debugging Exercise Walkthrough</h3>
+    
+    <div class="bug-box">
+      <div class="bug-title">Bug 1: Port Conflict (EADDRINUSE)</div>
+      <div class="bug-desc"><strong>Issue:</strong> Server crashes on launch with <code>Error: listen EADDRINUSE: address already in use :::3000</code> when another process or previous run occupies the port.</div>
+      <div class="bug-fix"><strong>Fix:</strong> Parameterized the port with environment fallback: <code>const PORT = process.env.PORT || 3000;</code> and killed active process using PowerShell PID search.</div>
+    </div>
+
+    <div class="bug-box">
+      <div class="bug-title">Bug 2: Wrong Import Path</div>
+      <div class="bug-desc"><strong>Issue:</strong> Runtime error <code>Cannot find module './database'</code> due to invalid relative resolution.</div>
+      <div class="bug-fix"><strong>Fix:</strong> Replaced faulty module imports with direct <code>sqlite</code> destructuring and <code>path.join(__dirname, 'books.db')</code>.</div>
+    </div>
+
+    <div class="bug-box">
+      <div class="bug-title">Bug 3: Table-Name Typo</div>
+      <div class="bug-desc"><strong>Issue:</strong> Queries failed with <code>SQLITE_ERROR: no such table: books</code> because DDL created <code>book</code> (singular) while queries targeted <code>books</code> (plural).</div>
+      <div class="bug-fix"><strong>Fix:</strong> Standardized table reference to <code>book</code> consistently across all queries and schemas.</div>
+    </div>
+
+    <div class="bug-box">
+      <div class="bug-title">Bug 4: Missing `await` Keyword</div>
+      <div class="bug-desc"><strong>Issue:</strong> API returned pending Promises <code>{}</code> or crashed due to unhandled async results.</div>
+      <div class="bug-fix"><strong>Fix:</strong> Ensured all database calls (<code>db.all</code>, <code>db.get</code>, <code>db.run</code>) are awaited within <code>async</code> Express route handlers.</div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       PAGE 4: TEST RESULTS & VIVA VOCE
+       ========================================================= -->
+  <div class="page-container page-break">
+    <div class="report-header">
+      <div>
+        <h2>5. Testing Matrix &amp; Viva Voce Answers</h2>
+        <div class="meta-sub">Automated &amp; Postman Test Verification Suite</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; color: #92400e;">
+        252U2R5033
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Test Case</th>
+          <th>Request URL / Payload</th>
+          <th>Expected</th>
+          <th>Received Output</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Search Filter</td>
+          <td><code>GET /books?search_q=Clean</code></td>
+          <td>200 OK</td>
+          <td>Returns "Clean Code" by Robert C. Martin</td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Sort by Price</td>
+          <td><code>GET /books?order_by=price&amp;order=DESC</code></td>
+          <td>200 OK</td>
+          <td>Top 1: "Introduction to Algorithms" (₹950)</td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Price Range</td>
+          <td><code>GET /books?min_price=600&amp;max_price=800</code></td>
+          <td>200 OK</td>
+          <td>4 books returned within [₹600, ₹800]</td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Get By ID</td>
+          <td><code>GET /books/2</code></td>
+          <td>200 OK</td>
+          <td>Single book object for ID 2</td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Missing Record</td>
+          <td><code>GET /books/9999</code></td>
+          <td>404 Not Found</td>
+          <td><code>{"message": "Book with ID 9999 not found"}</code></td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Payload Validation</td>
+          <td><code>POST /books</code> (missing title)</td>
+          <td>400 Bad Request</td>
+          <td><code>{"message": "Validation Error: 'title' is required..."}</code></td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Price Type Check</td>
+          <td><code>POST /books</code> (price: "abc")</td>
+          <td>400 Bad Request</td>
+          <td><code>{"message": "Validation Error: 'price' must be a non-negative number."}</code></td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Create Book</td>
+          <td><code>POST /books</code> (valid JSON)</td>
+          <td>201 Created</td>
+          <td><code>{"message": "Book Added Successfully", "bookId": 11}</code></td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Update Book</td>
+          <td><code>PUT /books/11</code> (valid JSON)</td>
+          <td>200 OK</td>
+          <td><code>{"message": "Book with ID 11 updated successfully"}</code></td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+        <tr>
+          <td>Delete Book</td>
+          <td><code>DELETE /books/11</code></td>
+          <td>200 OK</td>
+          <td><code>{"message": "Book with ID 11 deleted successfully"}</code></td>
+          <td><strong style="color:green;">PASS</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-heading">6. Viva Voce Questions &amp; Detailed Answers</h3>
+
+    <div class="qna-box">
+      <div class="qna-q">Q1: Query Parameter vs. Path Parameter?</div>
+      <div class="qna-a">
+        <strong>Path parameters</strong> (e.g., <code>/books/:bookId</code>) are mandatory parts of the URL path used to identify a distinct individual resource entity. <strong>Query parameters</strong> (e.g., <code>/books?order_by=price&amp;limit=5</code>) appear after the <code>?</code> delimiter as optional key-value pairs used to modify, filter, paginate, or sort the resource collection without identifying a different resource type.
+      </div>
+    </div>
+
+    <div class="qna-box">
+      <div class="qna-q">Q2: What does "stateless" mean in REST architecture?</div>
+      <div class="qna-a">
+        A stateless REST API does not retain any client session context on the server between requests. Every incoming HTTP request must encapsulate all necessary data (authentication credentials, parameters, payload) required for the server to process it completely and independently.
+      </div>
+    </div>
+
+    <div class="qna-box">
+      <div class="qna-q">Q3: Which status code is used for bad input vs. a missing record?</div>
+      <div class="qna-a">
+        <strong>400 Bad Request</strong> is used for invalid or malformed client input (such as omitted mandatory fields or non-numeric types). <strong>404 Not Found</strong> is returned when the request format is valid, but the requested URI / resource ID does not exist in the database.
+      </div>
+    </div>
+
+    <div class="qna-box">
+      <div class="qna-q">Q4: Why await the database call and use parameterized queries?</div>
+      <div class="qna-a">
+        Database calls are asynchronous I/O operations; using <code>await</code> ensures the query resolves before the response is dispatched to the client. Parameterized queries (<code>?</code> placeholders) separate the SQL execution logic from user-provided data, rendering SQL injection impossible because inputs are treated strictly as data literals.
+      </div>
+    </div>
+
+    <div class="eval-block">
+      <div style="font-size: 13px; color: #4b5563;">
+        <div><strong>Evaluation Rubric:</strong></div>
+        <div>• Working output: 50% &nbsp;|&nbsp; • Code quality: 20%</div>
+        <div>• Testing evidence: 15% &nbsp;|&nbsp; • Viva Voce: 15%</div>
+      </div>
+      <div style="text-align: right;">
+        <div style="font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 25px;">Faculty Signature: _______________________</div>
+        <div style="font-size: 12px; color: #6b7280;">Prof. Joel Prashanth D · Aurora CSE Dept</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

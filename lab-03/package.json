@@ -1,0 +1,31 @@
+{
+  "name": "lab-03",
+  "version": "1.0.0",
+  "description": "Lab 3: REST API, query parameters, validation, and debugging",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "setup-db": "node setupDb.js",
+    "test-api": "node test-api.js"
+  },
+  "keywords": [
+    "express",
+    "sqlite",
+    "rest-api",
+    "query-parameters",
+    "input-validation",
+    "lab-03",
+    "adbms"
+  ],
+  "author": "DADDANALA RANGA MANOJ KUMAR REDDY (252U2R5033)",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.3.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "info": {
+    "_postman_id": "b3e047f2-1a4b-4b2a-89a1-lab03backend",
+    "name": "Lab 3 - REST API, Query Params & Validation (252U2R5033)",
+    "description": "Postman test collection for Lab 3: REST API development with SQLite, search, filters, validation, and debugging.\nStudent: DADDANALA RANGA MANOJ KUMAR REDDY\nReg No: 252U2R5033\nClass: AI AND DE 2A\nCourse: ADBMS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. GET All Books (Default)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books"]
+        },
+        "description": "Retrieves all books with default limit of 10 and order by id ASC."
+      },
+      "response": []
+    },
+    {
+      "name": "2. GET Search by Title (?search_q=Clean)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books?search_q=Clean",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books"],
+          "query": [
+            { "key": "search_q", "value": "Clean" }
+          ]
+        },
+        "description": "Searches books where title contains 'Clean' using SQL LIKE ? parameter."
+      },
+      "response": []
+    },
+    {
+      "name": "3. GET Sort by Price Descending (?order_by=price&order=DESC)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books?order_by=price&order=DESC&limit=5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books"],
+          "query": [
+            { "key": "order_by", "value": "price" },
+            { "key": "order", "value": "DESC" },
+            { "key": "limit", "value": "5" }
+          ]
+        },
+        "description": "Sorts books by price descending with a limit of 5 records."
+      },
+      "response": []
+    },
+    {
+      "name": "4. GET Filter by Price Range (?min_price=500&max_price=800)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books?min_price=500&max_price=800",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books"],
+          "query": [
+            { "key": "min_price", "value": "500" },
+            { "key": "max_price", "value": "800" }
+          ]
+        },
+        "description": "Filters books between ₹500 and ₹800 using SQL BETWEEN ? AND ?."
+      },
+      "response": []
+    },
+    {
+      "name": "5. GET Single Book by ID (/books/2)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books", "2"]
+        },
+        "description": "Retrieves the book with ID 2. Expects 200 OK."
+      },
+      "response": []
+    },
+    {
+      "name": "6. GET Single Book - Not Found (/books/9999)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books/9999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books", "9999"]
+        },
+        "description": "Retrieves non-existent book ID 9999. Expects 404 Not Found."
+      },
+      "response": []
+    },
+    {
+      "name": "7. POST Create Book (201 Created)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"System Design Interview – An Insider's Guide\",\n  \"author\": \"Alex Xu\",\n  \"price\": 899,\n  \"pages\": 320\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/books",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books"]
+        },
+        "description": "Creates a new book. Expects 201 Created and newly assigned bookId."
+      },
+      "response": []
+    },
+    {
+      "name": "8. POST Validation Failure - Missing Title (400 Bad Request)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"author\": \"Martin Fowler\",\n  \"price\": 550\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/books",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books"]
+        },
+        "description": "Rejects request because 'title' field is missing. Expects 400 Bad Request."
+      },
+      "response": []
+    },
+    {
+      "name": "9. POST Validation Failure - Non-numeric Price (400 Bad Request)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Computer Networks\",\n  \"author\": \"Andrew S. Tanenbaum\",\n  \"price\": \"five hundred\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/books",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books"]
+        },
+        "description": "Rejects request because 'price' is not a number. Expects 400 Bad Request."
+      },
+      "response": []
+    },
+    {
+      "name": "10. PUT Update Book (200 OK)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Clean Code (Revised Edition)\",\n  \"price\": 720\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/books/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books", "2"]
+        },
+        "description": "Updates book with ID 2. Expects 200 OK."
+      },
+      "response": []
+    },
+    {
+      "name": "11. PUT Update Non-existent Book (404 Not Found)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Unknown Book\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/books/9999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books", "9999"]
+        },
+        "description": "Attempts to update a book that does not exist. Expects 404 Not Found."
+      },
+      "response": []
+    },
+    {
+      "name": "12. DELETE Existing Book (200 OK)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books/10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books", "10"]
+        },
+        "description": "Deletes book with ID 10. Expects 200 OK."
+      },
+      "response": []
+    },
+    {
+      "name": "13. DELETE Non-existent Book (404 Not Found)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/books/9999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["books", "9999"]
+        },
+        "description": "Attempts to delete non-existent ID. Expects 404 Not Found."
+      },
+      "response": []
+    }
+  ]
+}
