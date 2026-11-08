@@ -13,6 +13,9 @@ async function setupDatabase() {
 
     console.log('Connected to SQLite database at:', dbPath);
 
+    // Drop and re-create to match faculty exact 10 books
+    await db.exec(`DROP TABLE IF EXISTS book;`);
+
     await db.exec(`
       CREATE TABLE IF NOT EXISTS book (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,26 +27,23 @@ async function setupDatabase() {
     `);
     console.log('Table "book" verified/created successfully.');
 
+    await db.exec(`
+      INSERT INTO book (title, author, price, pages) VALUES
+      ('The Alchemist', 'Paulo Coelho', 250, 208),
+      ('Atomic Habits', 'James Clear', 450, 320),
+      ('Rich Dad Poor Dad', 'Robert Kiyosaki', 300, 336),
+      ('Wings of Fire', 'A.P.J. Abdul Kalam', 200, 180),
+      ('Ikigai', 'Hector Garcia', 350, 194),
+      ('Think Like a Monk', 'Jay Shetty', 400, 288),
+      ('Deep Work', 'Cal Newport', 500, 304),
+      ('The Power of Now', 'Eckhart Tolle', 280, 236),
+      ('Zero to One', 'Peter Thiel', 320, 210),
+      ('The 5 AM Club', 'Robin Sharma', 380, 336);
+    `);
+    console.log('Exact 10 faculty sample books inserted successfully.');
+
     const countRow = await db.get(`SELECT COUNT(*) AS count FROM book;`);
-    if (countRow.count === 0) {
-      console.log('Seeding initial records...');
-      await db.exec(`
-        INSERT INTO book (title, author, price, pages) VALUES
-        ('Harry Potter and the Sorcerer''s Stone', 'J.K. Rowling', 450, 320),
-        ('Clean Code', 'Robert C. Martin', 650, 464),
-        ('JavaScript: The Good Parts', 'Douglas Crockford', 350, 176),
-        ('Design Patterns: Elements of Reusable Object-Oriented Software', 'Erich Gamma', 800, 395),
-        ('You Don''t Know JS: Scope & Closures', 'Kyle Simpson', 550, 278),
-        ('The Pragmatic Programmer', 'Andrew Hunt', 700, 352),
-        ('Eloquent JavaScript', 'Marijn Haverbeke', 400, 472),
-        ('Introduction to Algorithms', 'Thomas H. Cormen', 950, 1312),
-        ('Refactoring: Improving the Design of Existing Code', 'Martin Fowler', 600, 448),
-        ('Designing Data-Intensive Applications', 'Martin Kleppmann', 850, 616);
-      `);
-      console.log('10 sample books inserted successfully.');
-    } else {
-      console.log(`Database already has ${countRow.count} records.`);
-    }
+    console.log(`Verified total books in DB: ${countRow.count}`);
 
     await db.close();
     console.log('Database setup complete.');

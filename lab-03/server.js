@@ -7,7 +7,7 @@ const sqlite3 = require('sqlite3');
 const app = express();
 app.use(express.json());
 
-// Support serverless (Vercel) /tmp directory for SQLite writable database
+// Support serverless (Vercel) writable DB in /tmp
 let dbPath = path.join(__dirname, 'books.db');
 if (process.env.VERCEL) {
   const tmpDbPath = path.join('/tmp', 'books.db');
@@ -28,7 +28,7 @@ let isInitialized = false;
 const PORT = process.env.PORT || 3000;
 
 /**
- * Initialize SQLite Database connection and create tables if needed
+ * Initialize SQLite Database connection
  */
 const initializeDBAndServer = async () => {
   if (isInitialized && db) return db;
@@ -50,30 +50,29 @@ const initializeDBAndServer = async () => {
       );
     `);
 
-    // Seed data if table is empty
+    // Verify record count and seed exactly the 10 Aurora university books if empty
     const countResult = await db.get(`SELECT COUNT(*) AS count FROM book;`);
     if (countResult && countResult.count === 0) {
       await db.exec(`
         INSERT INTO book (title, author, price, pages) VALUES
-        ('Harry Potter and the Sorcerer''s Stone', 'J.K. Rowling', 450, 320),
-        ('Clean Code', 'Robert C. Martin', 650, 464),
-        ('JavaScript: The Good Parts', 'Douglas Crockford', 350, 176),
-        ('Design Patterns: Elements of Reusable Object-Oriented Software', 'Erich Gamma', 800, 395),
-        ('You Don''t Know JS: Scope & Closures', 'Kyle Simpson', 550, 278),
-        ('The Pragmatic Programmer', 'Andrew Hunt', 700, 352),
-        ('Eloquent JavaScript', 'Marijn Haverbeke', 400, 472),
-        ('Introduction to Algorithms', 'Thomas H. Cormen', 950, 1312),
-        ('Refactoring: Improving the Design of Existing Code', 'Martin Fowler', 600, 448),
-        ('Designing Data-Intensive Applications', 'Martin Kleppmann', 850, 616);
+        ('The Alchemist', 'Paulo Coelho', 250, 208),
+        ('Atomic Habits', 'James Clear', 450, 320),
+        ('Rich Dad Poor Dad', 'Robert Kiyosaki', 300, 336),
+        ('Wings of Fire', 'A.P.J. Abdul Kalam', 200, 180),
+        ('Ikigai', 'Hector Garcia', 350, 194),
+        ('Think Like a Monk', 'Jay Shetty', 400, 288),
+        ('Deep Work', 'Cal Newport', 500, 304),
+        ('The Power of Now', 'Eckhart Tolle', 280, 236),
+        ('Zero to One', 'Peter Thiel', 320, 210),
+        ('The 5 AM Club', 'Robin Sharma', 380, 336);
       `);
     }
 
     isInitialized = true;
 
-    // Start standalone listener when executed directly
     if (!process.env.VERCEL && process.env.NODE_ENV !== 'test' && require.main === module) {
       app.listen(PORT, () => {
-        console.log(`Lab 3 Server running at http://localhost:${PORT}/`);
+        console.log(`Lab 3 Server running at http://localhost:${PORT}/books`);
       });
     }
   } catch (error) {
@@ -82,7 +81,6 @@ const initializeDBAndServer = async () => {
   }
 };
 
-// Start initial setup
 initializeDBAndServer();
 
 // Ensure DB is ready before every request
@@ -93,32 +91,19 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Root welcome endpoint for Lab 3
+// Root redirects directly to /books so browser immediately shows the books output
 app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Welcome to Lab 3: REST API with Query Parameters, Validation & SQLite',
-    student: {
-      name: 'DADDANALA RANGA MANOJ KUMAR REDDY',
-      registrationNumber: '252U2R5033',
-      section: 'AI AND DE 2A',
-      course: 'ADBMS - Backend Development Fundamentals',
-      experiment: 'Lab report 3'
-    },
-    endpoints: {
-      getAllBooks: '/books',
-      searchBooks: '/books?search_q=Clean',
-      sortBooks: '/books?order_by=price&order=DESC',
-      filterPriceRange: '/books?min_price=500&max_price=800',
-      getSingleBook: '/books/2',
-      createBook: 'POST /books',
-      updateBook: 'PUT /books/2',
-      deleteBook: 'DELETE /books/10'
-    }
-  });
+  res.redirect('/books');
 });
 
 /**
  * Task 1, 2, 3: GET /books/
+ * Output format exactly matches faculty specification:
+ * {
+ *   "message": "Books retrieved successfully.",
+ *   "count": 10,
+ *   "data": [ ... ]
+ * }
  */
 app.get('/books', async (req, res) => {
   try {
@@ -158,14 +143,19 @@ app.get('/books', async (req, res) => {
     ];
 
     const books = await db.all(getBooksQuery, queryParams);
-    res.status(200).json(books);
+
+    res.status(200).json({
+      message: 'Books retrieved successfully.',
+      count: books.length,
+      data: books
+    });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error.message}` });
   }
 });
 
 /**
- * GET /books/:bookId/ - Retrieve single book
+ * GET /books/:bookId/ - Retrieve single book by ID
  */
 app.get('/books/:bookId', async (req, res) => {
   try {
@@ -174,17 +164,20 @@ app.get('/books/:bookId', async (req, res) => {
     const book = await db.get(getBookQuery, [bookId]);
 
     if (!book) {
-      return res.status(404).json({ message: `Book with ID ${bookId} not found` });
+      return res.status(404).json({ message: `Book with ID ${bookId} not found.` });
     }
 
-    res.status(200).json(book);
+    res.status(200).json({
+      message: 'Book retrieved successfully.',
+      data: book
+    });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error.message}` });
   }
 });
 
 /**
- * POST /books/ - Create book with validation
+ * Task 4 & 5: POST /books/
  */
 app.post('/books', async (req, res) => {
   try {
@@ -227,8 +220,14 @@ app.post('/books', async (req, res) => {
     ]);
 
     res.status(201).json({
-      message: 'Book Added Successfully',
-      bookId: result.lastID
+      message: 'Book created successfully.',
+      data: {
+        id: result.lastID,
+        title: title.trim(),
+        author: author.trim(),
+        price: Math.round(Number(price)),
+        pages: pages ? Math.round(Number(pages)) : 100
+      }
     });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error.message}` });
@@ -236,7 +235,7 @@ app.post('/books', async (req, res) => {
 });
 
 /**
- * PUT /books/:bookId/ - Update book
+ * Task 5: PUT /books/:bookId/
  */
 app.put('/books/:bookId', async (req, res) => {
   try {
@@ -246,7 +245,7 @@ app.put('/books/:bookId', async (req, res) => {
     const existingBook = await db.get(checkQuery, [bookId]);
 
     if (!existingBook) {
-      return res.status(404).json({ message: `Book with ID ${bookId} not found` });
+      return res.status(404).json({ message: `Book with ID ${bookId} not found.` });
     }
 
     const { title, author, price, pages } = req.body;
@@ -283,7 +282,7 @@ app.put('/books/:bookId', async (req, res) => {
     ]);
 
     res.status(200).json({
-      message: `Book with ID ${bookId} updated successfully`
+      message: 'Book updated successfully.'
     });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error.message}` });
@@ -291,7 +290,7 @@ app.put('/books/:bookId', async (req, res) => {
 });
 
 /**
- * DELETE /books/:bookId/ - Delete book
+ * Task 5: DELETE /books/:bookId/
  */
 app.delete('/books/:bookId', async (req, res) => {
   try {
@@ -301,21 +300,21 @@ app.delete('/books/:bookId', async (req, res) => {
     const existingBook = await db.get(checkQuery, [bookId]);
 
     if (!existingBook) {
-      return res.status(404).json({ message: `Book with ID ${bookId} not found` });
+      return res.status(404).json({ message: `Book with ID ${bookId} not found.` });
     }
 
     const deleteBookQuery = `DELETE FROM book WHERE id = ?;`;
     await db.run(deleteBookQuery, [bookId]);
 
     res.status(200).json({
-      message: `Book with ID ${bookId} deleted successfully`
+      message: 'Book deleted successfully.'
     });
   } catch (error) {
     res.status(500).json({ message: `Internal Server Error: ${error.message}` });
   }
 });
 
-// Catch-all 404 handler for undefined routes
+// Catch-all 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Endpoint not found' });
 });
