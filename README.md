@@ -7,8 +7,8 @@ Node.js, Express.js, SQLite, and Backend REST API Lab Assignments.
 ## 👨‍🎓 Student Details
 
 - **Student Name:** DADDANALA RANGA MANOJ KUMAR REDDY
-- **Registration Number:** `252U2R5033`
-- **Class / Section:** `AI AND DE 2A`
+- **Registration Number:** `252U1R5033`
+- **Class / Section:** `AI & DE 2A`
 - **Subject:** ADBMS (Advanced Database Management Systems) & Backend Development Fundamentals
 - **Academic Year:** Year II Term II · Aurora
 - **Faculty:** Joel Prashanth D
